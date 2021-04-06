@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Joel's todo application</title>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.css">
+	<!-- production version, optimized for size and speed -->
+	<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+	<script src="main.js"></script>
+	<link rel="stylesheet" type="text/css" href="main.css">
+</head>
+<body>
+	<h1>Todo List</h1>
+	<div class="container">
+		<div id="todo" class="">
+			Add a new todo item:
+				<form action="" method="POST" id="addNote">
+					<fieldset>
+						<label for="title">Title</label>
+						<input type="text" name="title" id="title" placeholder="Title">
+						<label for="Notes">Notes</label>
+						<textarea name="notes" cols="40" rows="5"></textarea>
+						<input type="submit" value="Add Item" class="button-primary" id="createItem">
+					</fieldset>
+				</form>
+		</div>
+		<div class="column column-50 column-offset-25">
+			<h2>Items</h2>
+			<table>
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Completed?</th>
+						<th>Notes</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="item of items">
+						<td>example</td>
+						<td>{{ item.completed }}</td>
+						<td>{{ item.notes }}</td>
+						<td><a class="button">Mark As Completed</a></td>
+						<td><a class="button">Delete item</a></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</body>
+</html>
