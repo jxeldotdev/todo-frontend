@@ -1,17 +1,3 @@
-<template>
-    <div id="todo" class="">
-        <form @submit.prevent="addTodo">
-            <fieldset>
-                <label for="name">Name</label>
-                <input v-model="name" type="text" name="name" placeholder="Title"/>
-                <label for="notes">Notes</label>
-                <textarea v-model="notes" name="notes" cols="40" rows="5"></textarea>
-                <button @click="sendForm()">Add item</button>
-            </fieldset>
-        </form>
-    </div>
-</template>
-
 <script>
 export default {
   data() {
@@ -26,9 +12,9 @@ export default {
         const name = this.name;
         const notes = this.notes;
         this.$emit('create-todo', {
-          name,
-          notes,
-          complete: false
+          name: name,
+          notes: notes,
+          completed: false
         });
         this.name = '';
         this.notes = '';
@@ -37,3 +23,17 @@ export default {
   },
 };
 </script>
+
+<template>
+    <div id="todo" class="">
+        <form @submit.prevent="sendForm">
+            <fieldset>
+                <label for="name">Name</label>
+                <input v-model="name" type="text" name="name" placeholder="Title"/>
+                <label for="notes">Notes</label>
+                <textarea v-model="notes" name="notes" cols="40" rows="5"></textarea>
+                <input type="submit" class="button" value="Add Item">
+            </fieldset>
+        </form>
+    </div>
+</template>

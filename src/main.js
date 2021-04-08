@@ -6,14 +6,5 @@ Vue.config.productionTip = false
 
 new Vue({
   data: {},
-  methods: {
-    addTodo: function () {
-
-    },
-
-    completeTodo: function () {
-
-    },
-  },
   render: h => h(App),
 }).$mount('#app')

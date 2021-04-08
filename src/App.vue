@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <TodoForm v-bind:todos="todos" />
+    <TodoForm v-bind:todos="todos" v-on:create-todo="addTodo" />
     <TodoList v-bind:todos="todos"></TodoList>
 
   </div>
@@ -9,9 +9,26 @@
 <script>
 import TodoForm from './components/TodoForm.vue';
 import TodoList from './components/TodoList.vue';
+import { v4 as uuidv4 } from 'uuid';
 
 export default {
   name: 'App',
+  methods: {
+    addTodo(todo) {
+      let newId = uuidv4();
+      let newTodo = {
+        id: newId,
+        name: todo.name,
+        notes: todo.notes,
+        completed: false
+      }
+      this.todos.push(newTodo);
+    },
+    deleteTodo(todo) {
+      let todoIndex = this.todos.indexOf(todo)
+      delete this.todos[todoIndex];
+    },
+  },
   data() {
     return {
       todos: [

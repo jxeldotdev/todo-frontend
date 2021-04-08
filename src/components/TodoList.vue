@@ -13,14 +13,14 @@
         </thead>
         <tbody>
             <div class="column column-50 column-offset-25">
-            <Todo v-on:delete-todo="deleteTodo" v-on:complete-todo="completeTodo" v-for="todo in todos" v-bind:key="todo.id" :todo.sync="todo"></Todo>
-            <tr v-for="todo in todos" v-bind="todo" v-bind:key="todo.id">
-                <td>{{ todo.name }}</td>
-                <td>{{ todo.completed }}</td>
-                <td><p>{{ todo.notes }}</p></td>
-                <td><button @click="completeTodo" class="button">Mark As Completed</button></td>
-                <td><button @click="deleteTodo" class="button">Delete item</button></td>
-            </tr>
+            <Todo 
+            v-on:delete-todo="deleteTodo" 
+            v-on:complete-todo="completeTodo"
+            v-bind:todo="todo" 
+            v-for="todo in todos" 
+            :key="todo.name"
+            >
+            </Todo>
             </div>
         </tbody>
     </table>
@@ -32,20 +32,23 @@ import Todo from './Todo.vue';
 
 export default {
     name: 'TodoList',
+    components: {
+        Todo,
+    },
     props: [
-        "todos",
+        "todos"
     ],
     methods: {
-    deleteTodo(todo) {
-        const todoIndex = this.todos.indexOf(todo);
-        console.log({todo, todoIndex })
-        this.todos.splice(todoIndex, 1);
+        deleteTodo(todo) {
+            const todoIndex = this.todos.indexOf(todo);
+            console.log("Deleting item: ", {todo, todoIndex })
+            this.todos.splice(todoIndex, 1);
+        },
+        completeTodo(todo) {
+            const todoIndex = this.todos.indexOf(todo);
+            console.log("Marking item as complete: ",{ todo, todoIndex })
+            this.todos[todoIndex].completed = true;
+        },
     },
-    completeTodo(todo) {
-        const todoIndex = this.todos.indexOf(todo);
-        console.log({ todo, todoIndex })
-        this.todos[todoIndex].completed = true;
-    }
-}
-}
+};
 </script>

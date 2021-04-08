@@ -1,10 +1,10 @@
 <template>
     <div>
-        <td>{{ todo.name }}</td>
-        <td>{{ todo.completed }}</td>
-        <td>{{ todo.notes }}</td>
-        <td><button @click="completeTodo(todo)" class="button">Mark As Completed</button></td>
-        <td><button @click="deleteTodo(todo)" class="button">Delete item</button></td>
+        <td>{{ this.todo.name }}</td>
+        <td>{{ this.todo.completed }}</td>
+        <td>{{ this.todo.notes }}</td>
+        <td><button @click="completeTodo" class="button">Mark As Completed</button></td>
+        <td><button @click="deleteTodo" class="button">Delete item</button></td>
     </div>
 </template>
 
@@ -13,11 +13,13 @@ export default {
     name: 'Todo',
     props: ['todo'],
     methods: {
-      completeTodo(todo) {
-        this.$emit('complete-todo', todo);
+      completeTodo() {
+        console.log(this.todo)
+        this.$emit('complete-todo', this.todo);
       },
-      deleteTodo(todo) {
-        this.$emit('delete-todo', todo);
+      deleteTodo() {
+        console.log(this.todo)
+        this.$emit('delete-todo', this.todo);
       },
     }
 }
