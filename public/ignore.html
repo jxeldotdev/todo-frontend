@@ -37,13 +37,15 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr v-for="item of items">
-						<td>example</td>
-						<td>{{ item.completed }}</td>
-						<td>{{ item.notes }}</td>
-						<td><a class="button">Mark As Completed</a></td>
-						<td><a class="button">Delete item</a></td>
-					</tr>
+					<div class="column column-50 column-offset-25">
+						<tr v-for="item of items">
+							<td>example</td>
+							<td>{{ item.completed }}</td>
+							<td>{{ item.notes }}</td>
+							<td><a class="button">Mark As Completed</a></td>
+							<td><a class="button">Delete item</a></td>
+						</tr>
+					</div>
 				</tbody>
 			</table>
 		</div>

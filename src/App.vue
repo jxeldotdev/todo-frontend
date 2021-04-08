@@ -2,6 +2,7 @@
   <div id="app">
     <TodoForm v-bind:todos="todos" />
     <TodoList v-bind:todos="todos"></TodoList>
+
   </div>
 </template>
 
@@ -11,6 +12,18 @@ import TodoList from './components/TodoList.vue';
 
 export default {
   name: 'App',
+  data() {
+    return {
+      todos: [
+        {
+          id: 'example-uuid-changeme',
+          name: 'Example',
+          notes: 'Example notes',
+          completed: false
+        },
+      ],
+    }
+  },
   components: {
     TodoForm,
     TodoList

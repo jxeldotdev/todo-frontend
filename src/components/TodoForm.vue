@@ -1,13 +1,12 @@
 <template>
     <div id="todo" class="">
-    Add a new todo item:
-        <form action="" method="POST" id="addNote">
+        <form @submit.prevent="addTodo">
             <fieldset>
                 <label for="name">Name</label>
-                <input type="text" name="title" id="title" placeholder="Title">
+                <input v-model="name" type="text" name="name" placeholder="Title"/>
                 <label for="notes">Notes</label>
-                <textarea name="notes" cols="40" rows="5"></textarea>
-                <input type="submit" value="Add Item" class="button-primary" v-on:click="addTodo">
+                <textarea v-model="notes" name="notes" cols="40" rows="5"></textarea>
+                <button @click="sendForm()">Add item</button>
             </fieldset>
         </form>
     </div>
@@ -15,5 +14,26 @@
 
 <script>
 export default {
-}
+  data() {
+    return {
+      name: '',
+      notes: ''
+    };
+  },
+  methods: {
+    sendForm() {
+      if (this.name.length > 0 && this.notes.length > 0) {
+        const name = this.name;
+        const notes = this.notes;
+        this.$emit('create-todo', {
+          name,
+          notes,
+          complete: false
+        });
+        this.name = '';
+        this.notes = '';
+      }
+    },
+  },
+};
 </script>
