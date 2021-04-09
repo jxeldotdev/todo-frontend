@@ -1,6 +1,6 @@
 <template>
   <div>
-    <td>{{ this.todo.name }}</td>
+    <td>{{ this.todo.title }}</td>
     <td>{{ this.todo.completed }}</td>
     <td>{{ this.todo.notes }}</td>
     <td>

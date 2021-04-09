@@ -19,7 +19,7 @@
               v-on:complete-todo="completeTodo"
               v-bind:todo="todo"
               v-for="todo in todos"
-              :key="todo.name"
+              :key="todo.id"
             >
             </Todo>
           </div>
@@ -38,6 +38,9 @@ export default {
   components: {
     Todo,
   },
+  mounted() {
+    console.log(this.todos)
+  },
   props: ["todos"],
   data() {
     return {
@@ -45,6 +48,7 @@ export default {
     }
   },
   methods: {
+
     deleteTodo(todo) {
       let apiUrl = process.env.VUE_APP_API_URL;
       const todoIndex = this.todos.indexOf(todo);
@@ -55,11 +59,13 @@ export default {
       axios.delete(apiUrl)
       .then(response => {
         console.log(response.data);
+        this.todos.splice(todoIndex, 1);
       })
       .catch( e => {
         console.log('ERROR', e)
         this.errors.push(e)
       })
+
     },
 
     completeTodo(todo) {
@@ -71,14 +77,17 @@ export default {
       
       let newTodo = {
         id: this.todos[todoIndex].id,
-        name: this.todos[todoIndex].name,
+        title: this.todos[todoIndex].title,
         notes: this.todos[todoIndex].notes,
         completed: true
       };
 
+      console.log('Marking todo as completed', newTodo);
+
       axios.put(apiUrl, newTodo)
       .then(response => {
         console.log(response.data);
+        this.todos[todoIndex].completed = true;
       })
       .catch( e => {
         console.log('ERROR', e)

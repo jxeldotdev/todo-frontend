@@ -7,7 +7,7 @@ export default {
     };
   },
   methods: {
-    sendForm() {
+    sendForm: function (event) {
       if (this.name.length > 0 && this.notes.length > 0) {
         const name = this.name;
         const notes = this.notes;

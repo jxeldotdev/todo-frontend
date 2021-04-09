@@ -1,45 +1,51 @@
 <template>
   <div id="app">
     <TodoForm v-bind:todos="todos" v-on:create-todo="addTodo" />
-    <TodoList v-bind:todos="todos" />
+    <TodoList v-bind:todos="todos" v-on:get-todos="getTodos" />
   </div>
 </template>
 
 <script>
 import TodoForm from "./components/TodoForm.vue";
 import TodoList from "./components/TodoList.vue";
-import uuidv4 from "uuid";
+import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 
 export default {
   name: "App",
   methods: {
     
-    addTodo(todo) {
+    addTodo: function (todo) {
       // construct endpoint
       let apiUrl = process.env.VUE_APP_API_URL;
-      apiUrl += "/todos/";
+      apiUrl += "/todo/";
 
-      let newId = uuidv4();
       let newTodo = {
-        id: newId,
-        name: todo.name,
+        title: todo.name,
         notes: todo.notes,
         completed: false,
       };
-
-      console.log(newTodo);
 
       this.todos.push(newTodo);
 
       axios.post(apiUrl, newTodo)
       .then(response => {
-        console.log(response.data)
+        console.log('response:', response.data)
+        let createdTodo = {
+          id: response.data.id,
+          title: response.data.title,
+          notes: response.data.notes,
+          completed: response.data.completed
+        };
+        //this.todos.push(createdTodo);
+        
       })
       .catch( e => {
         console.log('ERROR', e)
         this.errors.push(e)
       })
+
+      this.$forceUpdate();
     },
 
     getTodos() {
@@ -60,14 +66,7 @@ export default {
   },
   data() {
     return {
-      todos: [
-        {
-          id: "example-uuid-changeme",
-          name: "Example",
-          notes: "Example notes",
-          completed: false,
-        },
-      ],
+      todos: [{}],
       errors: [],
     };
   },
