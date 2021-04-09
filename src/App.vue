@@ -1,18 +1,21 @@
 <template>
   <div id="app">
     <TodoForm v-bind:todos="todos" v-on:create-todo="addTodo" />
-    <TodoList v-bind:todos="todos"></TodoList>
-
+    <TodoList v-bind:todos="todos" v-on:delete-todo="deleteTodo" v-on:complete-todo="completeTodo" />
   </div>
 </template>
 
 <script>
-import TodoForm from './components/TodoForm.vue';
-import TodoList from './components/TodoList.vue';
-import { v4 as uuidv4 } from 'uuid';
+import TodoForm from "./components/TodoForm.vue";
+import TodoList from "./components/TodoList.vue";
+import uuidv4 from "uuid";
+import axios from 'axios';
 
 export default {
-  name: 'App',
+  name: "App",
+  mounted() {
+    this.getTodos();
+  },
   methods: {
     addTodo(todo) {
       let newId = uuidv4();
@@ -20,30 +23,44 @@ export default {
         id: newId,
         name: todo.name,
         notes: todo.notes,
-        completed: false
-      }
+        completed: false,
+      };
       this.todos.push(newTodo);
     },
     deleteTodo(todo) {
-      let todoIndex = this.todos.indexOf(todo)
+      let todoIndex = this.todos.indexOf(todo);
       delete this.todos[todoIndex];
     },
+    completeTodo(todo) {
+      console.log('COMPLETING TODO', todo)
+      this.todo.completed = true;
+    },
+    getTodos() {
+      axios.get('http://localhost:8000/todos')
+      .then(response => {
+        console.log(response.data);
+      })
+      .catch( e => {
+        console.log('ERROR', e)
+        this.errors.push(e)
+      })
+    }
   },
   data() {
     return {
       todos: [
         {
-          id: 'example-uuid-changeme',
-          name: 'Example',
-          notes: 'Example notes',
-          completed: false
+          id: "example-uuid-changeme",
+          name: "Example",
+          notes: "Example notes",
+          completed: false,
         },
       ],
-    }
+    };
   },
   components: {
     TodoForm,
-    TodoList
+    TodoList,
   },
 };
 </script>
