@@ -39,16 +39,51 @@ export default {
     Todo,
   },
   props: ["todos"],
+  data() {
+    return {
+      errors: []
+    }
+  },
   methods: {
     deleteTodo(todo) {
-        const todoIndex = this.todos.indexOf(todo);
-        console.log("Deleting item: ", { todo, todoIndex });
-        this.todos.splice(todoIndex, 1);
+      let apiUrl = process.env.VUE_APP_API_URL;
+      const todoIndex = this.todos.indexOf(todo);
+      apiUrl += "/todos/";
+      apiUrl += this.todos[todoIndex].id;
+      
+      console.log("Deleting item: ", { todo, todoIndex }, apiUrl);
+      axios.delete(apiUrl)
+      .then(response => {
+        console.log(response.data);
+      })
+      .catch( e => {
+        console.log('ERROR', e)
+        this.errors.push(e)
+      })
     },
+
     completeTodo(todo) {
-        const todoIndex = this.todos.indexOf(todo);
-        console.log("Marking item as complete: ", { todo, todoIndex });
-        this.todos[todoIndex].completed = true;
+      // construct endpoint
+      let apiUrl = process.env.VUE_APP_API_URL;
+      const todoIndex = this.todos.indexOf(todo);
+      apiUrl += "/todos/";
+      apiUrl += this.todos[todoIndex].id;
+      
+      newTodo = {
+        id: this.todos[todoIndex].id,
+        name: this.todos[todoIndex].name,
+        notes: this.todos[todoIndex].notes,
+        completed: true
+      },
+
+      axios.put(apiUrl, newTodo)
+      .then(response => {
+        console.log(response.data);
+      })
+      .catch( e => {
+        console.log('ERROR', e)
+        this.errors.push(e)
+      })
     },
   },
 };

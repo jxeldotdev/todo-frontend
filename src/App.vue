@@ -17,7 +17,12 @@ export default {
     this.getTodos();
   },
   methods: {
+    
     addTodo(todo) {
+      // construct endpoint
+      let apiUrl = process.env.VUE_APP_API_URL;
+      apiUrl += "/todos/";
+
       let newId = uuidv4();
       let newTodo = {
         id: newId,
@@ -25,20 +30,27 @@ export default {
         notes: todo.notes,
         completed: false,
       };
+
       this.todos.push(newTodo);
+
+      axios.post(apiUrl, newTodo)
+      .then(response => {
+        console.log(response.data)
+      })
+      .catch( e => {
+        console.log('ERROR', e)
+        this.errors.push(e)
+      })
     },
-    deleteTodo(todo) {
-      let todoIndex = this.todos.indexOf(todo);
-      delete this.todos[todoIndex];
-    },
-    completeTodo(todo) {
-      console.log('COMPLETING TODO', todo)
-      this.todo.completed = true;
-    },
+
     getTodos() {
-      axios.get('http://localhost:8000/todos')
+      let apiUrl = process.env.VUE_APP_API_URL;
+      apiUrl += "/todos";
+
+      axios.get(apiUrl)
       .then(response => {
         console.log(response.data);
+        this.todos = response.data;
       })
       .catch( e => {
         console.log('ERROR', e)
@@ -56,6 +68,7 @@ export default {
           completed: false,
         },
       ],
+      errors: [],
     };
   },
   components: {
