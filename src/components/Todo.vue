@@ -16,11 +16,11 @@ export default {
   props: ["todo"],
   methods: {
     completeTodo() {
-      console.log(this.todo);
+      console.log('Todo emitting completeTodo', this.todo);
       this.$emit("complete-todo", this.todo);
     },
     deleteTodo() {
-      console.log(this.todo);
+      console.log('Todo emitting deleteTodo', this.todo);
       this.$emit("delete-todo", this.todo);
     },
   },

@@ -48,7 +48,7 @@ export default {
     deleteTodo(todo) {
       let apiUrl = process.env.VUE_APP_API_URL;
       const todoIndex = this.todos.indexOf(todo);
-      apiUrl += "/todos/";
+      apiUrl += "/todo/";
       apiUrl += this.todos[todoIndex].id;
       
       console.log("Deleting item: ", { todo, todoIndex }, apiUrl);
@@ -66,15 +66,15 @@ export default {
       // construct endpoint
       let apiUrl = process.env.VUE_APP_API_URL;
       const todoIndex = this.todos.indexOf(todo);
-      apiUrl += "/todos/";
+      apiUrl += "/todo/";
       apiUrl += this.todos[todoIndex].id;
       
-      newTodo = {
+      let newTodo = {
         id: this.todos[todoIndex].id,
         name: this.todos[todoIndex].name,
         notes: this.todos[todoIndex].notes,
         completed: true
-      },
+      };
 
       axios.put(apiUrl, newTodo)
       .then(response => {

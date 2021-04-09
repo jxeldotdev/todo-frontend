@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <TodoForm v-bind:todos="todos" v-on:create-todo="addTodo" />
-    <TodoList v-bind:todos="todos" v-on:delete-todo="deleteTodo" v-on:complete-todo="completeTodo" />
+    <TodoList v-bind:todos="todos" />
   </div>
 </template>
 
@@ -13,9 +13,6 @@ import axios from 'axios';
 
 export default {
   name: "App",
-  mounted() {
-    this.getTodos();
-  },
   methods: {
     
     addTodo(todo) {
@@ -31,6 +28,8 @@ export default {
         completed: false,
       };
 
+      console.log(newTodo);
+
       this.todos.push(newTodo);
 
       axios.post(apiUrl, newTodo)
@@ -45,7 +44,7 @@ export default {
 
     getTodos() {
       let apiUrl = process.env.VUE_APP_API_URL;
-      apiUrl += "/todos";
+      apiUrl += "/todo";
 
       axios.get(apiUrl)
       .then(response => {
@@ -56,6 +55,7 @@ export default {
         console.log('ERROR', e)
         this.errors.push(e)
       })
+      console.log(this.todos);
     }
   },
   data() {
@@ -70,6 +70,9 @@ export default {
       ],
       errors: [],
     };
+  },
+  created() {
+    this.getTodos();
   },
   components: {
     TodoForm,
