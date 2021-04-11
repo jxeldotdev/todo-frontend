@@ -3,10 +3,12 @@
     <td>{{ this.todo.title }}</td>
     <td>{{ this.todo.completed }}</td>
     <td>{{ this.todo.notes }}</td>
-    <td>
-      <button @click="completeTodo" class="button">Mark As Completed</button>
+    <td id="complete-button">
+      <button @click="completeTodo" class="waves-effect waves-light btn">Mark As Completed</button>
     </td>
-    <td><button @click="deleteTodo" class="button">Delete item</button></td>
+    <td id="delete-button">
+      <button @click="deleteTodo" class="waves-effect waves-light btn">Delete item</button>
+    </td>
   </div>
 </template>
 

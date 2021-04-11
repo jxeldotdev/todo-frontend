@@ -1,28 +1,24 @@
 <template>
-  <div class="column column-50 column-offset-25">
+  <div id="table-wrapper" class="column column-50 column-offset-25">
     <h2>Items</h2>
-    <div class="todo-table">
+    <div>
       <table>
         <thead>
-          <div class="column column-50 column-offset-25">
             <tr>
               <th>Name</th>
               <th>Completed?</th>
               <th>Notes</th>
             </tr>
-          </div>
         </thead>
         <tbody>
-          <div class="column column-50 column-offset-25">
             <Todo
               v-on:delete-todo="deleteTodo"
               v-on:complete-todo="completeTodo"
               v-bind:todo="todo"
               v-for="todo in todos"
-              :key="todo.id"
+              :key="todo"
             >
             </Todo>
-          </div>
         </tbody>
       </table>
     </div>

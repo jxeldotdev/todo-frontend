@@ -25,7 +25,7 @@ export default {
 </script>
 
 <template>
-  <div id="todo" class="">
+  <div id="form-wrapper">
     <form @submit.prevent="sendForm">
       <fieldset>
         <label for="name">Name</label>
@@ -37,3 +37,12 @@ export default {
     </form>
   </div>
 </template>
+
+<style scoped>
+#form-wrapper {
+  max-width: 50%;
+  margin: auto;
+  align-content: center;
+}
+
+</style>

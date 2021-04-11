@@ -1,7 +1,11 @@
 <template>
   <div id="app">
-    <TodoForm v-bind:todos="todos" v-on:create-todo="addTodo" />
-    <TodoList v-bind:todos="todos" v-on:get-todos="getTodos" />
+    <div id="form-wrapper">
+      <TodoForm v-bind:todos="todos" v-on:create-todo="addTodo" />
+    </div>
+    <div id="list-wrapper" >
+      <TodoList v-bind:todos="todos" v-on:get-todos="getTodos" />
+    </div>
   </div>
 </template>
 
@@ -10,7 +14,7 @@ import TodoForm from "./components/TodoForm.vue";
 import TodoList from "./components/TodoList.vue";
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
-
+import materialize from "../node_modules/materialize-css/dist/css/materialize.css";
 export default {
   name: "App",
   methods: {
@@ -31,13 +35,6 @@ export default {
       axios.post(apiUrl, newTodo)
       .then(response => {
         console.log('response:', response.data)
-        let createdTodo = {
-          id: response.data.id,
-          title: response.data.title,
-          notes: response.data.notes,
-          completed: response.data.completed
-        };
-        //this.todos.push(createdTodo);
         
       })
       .catch( e => {
@@ -82,11 +79,13 @@ export default {
 
 <style>
 #app {
+  width: 80vw;
+  margin: auto;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+  
 }
 </style>
