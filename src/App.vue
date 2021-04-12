@@ -21,20 +21,21 @@ export default {
     
     addTodo: function (todo) {
       // construct endpoint
-      let apiUrl = process.env.VUE_APP_API_URL;
+      var apiUrl = process.env.VUE_APP_API_URL;
       apiUrl += "/todo/";
 
       let newTodo = {
+        id: uuidv4(),
         title: todo.name,
         notes: todo.notes,
         completed: false,
       };
 
-      this.todos.push(newTodo);
-
       axios.post(apiUrl, newTodo)
       .then(response => {
         console.log('response:', response.data)
+        // I can't figure out how to get todoId to not be recalculated each time it's called
+        this.todos.push(response.data);
         
       })
       .catch( e => {

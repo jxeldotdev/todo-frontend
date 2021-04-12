@@ -1,8 +1,7 @@
 <template>
-  <div id="table-wrapper" class="column column-50 column-offset-25">
-    <h2>Items</h2>
-    <div>
-      <table>
+  <div id="table-wrapper">
+    <h4>Items</h4>
+      <table class="centered">
         <thead>
             <tr>
               <th>Name</th>
@@ -11,18 +10,17 @@
             </tr>
         </thead>
         <tbody>
-            <Todo
-              v-on:delete-todo="deleteTodo"
-              v-on:complete-todo="completeTodo"
-              v-bind:todo="todo"
-              v-for="todo in todos"
-              :key="todo"
-            >
-            </Todo>
+          <Todo
+            v-on:delete-todo="deleteTodo"
+            v-on:complete-todo="completeTodo"
+            v-bind:todo="todo"
+            v-for="todo in todos"
+            :key="todo.id"
+          >
+          </Todo>
         </tbody>
       </table>
     </div>
-  </div>
 </template>
 
 <script>
@@ -40,7 +38,7 @@ export default {
   props: ["todos"],
   data() {
     return {
-      errors: []
+      listErrors: []
     }
   },
   methods: {
@@ -59,7 +57,7 @@ export default {
       })
       .catch( e => {
         console.log('ERROR', e)
-        this.errors.push(e)
+        this.listErrors.push(e)
       })
 
     },
@@ -87,7 +85,7 @@ export default {
       })
       .catch( e => {
         console.log('ERROR', e)
-        this.errors.push(e)
+        this.listErrors.push(e)
       })
     },
   },

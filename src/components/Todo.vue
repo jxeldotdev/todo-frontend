@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <tr>
     <td>{{ this.todo.title }}</td>
     <td>{{ this.todo.completed }}</td>
     <td>{{ this.todo.notes }}</td>
@@ -9,7 +9,7 @@
     <td id="delete-button">
       <button @click="deleteTodo" class="waves-effect waves-light btn">Delete item</button>
     </td>
-  </div>
+  </tr>
 </template>
 
 <script>
