@@ -29,10 +29,10 @@ export default {
     <form @submit.prevent="sendForm">
       <fieldset>
         <label for="name">Name</label>
-        <input v-model="name" type="text" name="name" placeholder="Title" />
+        <input v-model="name" type="text" name="name" placeholder="Name" />
         <label for="notes">Notes</label>
         <textarea v-model="notes" name="notes" class="materialize-textarea" placeholder="Lorem Ipsum"></textarea>
-        <button @click="sendForm" class="waves-effect waves-light btn">Add Item</button>
+        <button @click="sendForm" class="btn waves-effect waves-light" name="action" type="submit">Add Item</button>
       </fieldset>
     </form>
   </div>
@@ -43,6 +43,6 @@ export default {
   max-width: 50%;
   margin: auto;
   align-content: center;
+  box-sizing: border-box;
 }
-
 </style>
