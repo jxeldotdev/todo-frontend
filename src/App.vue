@@ -76,7 +76,6 @@ export default {
     if (process.env.NODE_ENV != "production") {
       this.display_errors = true;
     }
-
     this.getTodos();
   },
   components: {

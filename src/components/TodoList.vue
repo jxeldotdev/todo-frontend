@@ -83,7 +83,7 @@ export default {
       };
 
       console.info('Marking todo as completed', newTodo);
-      
+
       axios.put(apiUrl, newTodo)
       .then(response => {
         console.debug('Todo item marked as completed successfully', response.data);

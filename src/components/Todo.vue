@@ -1,8 +1,8 @@
 <template>
   <tr>
-    <td>{{ this.todo.title }}</td>
-    <td>{{ this.todo.completed }}</td>
-    <td>{{ this.todo.notes }}</td>
+    <td class="todo-title">{{ this.todo.title }}</td>
+    <td class="todo-completion">{{ this.todo.completed }}</td>
+    <td class="todo-notes">{{ this.todo.notes }}</td>
     <td id="complete-button">
       <button @click="completeTodo" class="waves-effect waves-light btn">Mark As Completed</button>
     </td>
