@@ -1,0 +1,27 @@
+version: '3'
+services:
+    frontend:
+        image: jfreemxn/todoapp-frontend:latest
+        build: .
+        volumes:
+            - ./:/usr/local/src/app/
+        ports:
+            - 8080:8080
+        command: serve
+    db:
+        image: postgres:alpine
+        ports: 
+        - 5432:5432
+        env_file: .env
+        volumes:
+        - data:/var/lib/postgresql/data
+    backend:
+        image: jfreemxn/todoapp-backend:latest
+        volumes:
+        - $HOME/proj/todo/backend/src/:/home/todoapp/src/
+        ports:
+        - 8000:8000
+        env_file: .env
+        command: web
+volumes:
+    data:

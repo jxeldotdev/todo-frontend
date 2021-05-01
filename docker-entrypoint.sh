@@ -1,9 +1,10 @@
 #!/bin/sh
 
 case "$@" in 
+
     test)
-        echo "Command $@ not implemented yet" 1>&2
-        exit 1
+        npm run lint
+        npm run test:unit
         ;;
     serve)
         npm run serve
