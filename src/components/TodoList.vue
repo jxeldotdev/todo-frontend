@@ -60,47 +60,11 @@ export default {
   },
   methods: {
     deleteTodo(todo) {
-      const todoIndex = this.todos.indexOf(todo);
-      API_URL += this.todos[todoIndex].id;
-      
-      console.info('Deleting item', { todo, todoIndex });
-      axios.delete(API_URL)
-      .then(response => {
-        console.debug('Todo item deleted successfully - API Response:', response.data);
-        this.todos.splice(todoIndex, 1);
-      })
-      .catch( e => {
-        console.error('API ERROR - Unable to delete todo item:', e)
-        this.errors.push(e)
-        this.errored = true;
-      })
+      this.$emit('delete-todo', todo)
     },
-
     completeTodo(todo) {
-      // construct endpoint
-      const todoIndex = this.todos.indexOf(todo);
-      API_URL += this.todos[todoIndex].id;
-      
-      let newTodo = {
-        id: this.todos[todoIndex].id,
-        title: this.todos[todoIndex].title,
-        notes: this.todos[todoIndex].notes,
-        completed: true
-      };
-
-      console.info('Marking todo as completed', newTodo);
-
-      axios.put(API_URL, newTodo)
-      .then(response => {
-        console.debug('Todo item marked as completed successfully', response.data);
-        this.todos[todoIndex].completed = true;
-      })
-      .catch( e => {
-        console.error('API ERROR - Unable to mark todo as complete:', e)
-        this.errors.push(e)
-        this.errored = true;
-      })
-    },
+      this.$emit('complete-todo', todo)
+    }
   },
 };
 </script>

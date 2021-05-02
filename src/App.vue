@@ -17,7 +17,8 @@
       <TodoList
         :todos="todos"
         todos.sync="todos"
-        @get-todos="getTodos"
+        @complete-todo="completeTodo"
+        @delete-todo="deleteTodo"
       />
     </div>
   </div>
@@ -30,7 +31,6 @@ import axios from 'axios';
 import materialize from "../node_modules/materialize-css/dist/css/materialize.css";
 
 let API_URL = process.env.VUE_APP_API_URL;
-API_URL += "/todo";
 
 export default {
   name: "App",
@@ -53,14 +53,52 @@ export default {
     this.getTodos();
   },
   methods: {
+    deleteTodo(todo) {
+      let requestUrl = API_URL + '/todo/' + todo.id;
+      const todoIndex = this.todos.indexOf(todo);
+
+      axios.delete(requestUrl)
+      .then(response => {
+        console.debug('Todo item deleted successfully - API Response:', response.data);
+        this.todos.splice(todoIndex, 1);
+      })
+      .catch( e => {
+        console.error('API ERROR - Unable to delete todo item:', e)
+        this.errors.push(e)
+        this.errored = true;
+      })
+    },
+
+    completeTodo: function (todo) {
+      let requestUrl = API_URL + '/todo/' + todo.id;
+      let newTodo = {
+        id: todo.id,
+        title: todo.title,
+        notes: todo.notes,
+        completed: todo.completed
+      };
+      
+      axios.put(requestUrl)
+      .then(response => {
+        console.debug('Todo item marked as completed successfully', response.data);
+        this.todos[todoIndex].completed = true;
+      })
+      .catch( e => {
+        console.error('API ERROR - Unable to mark todo as complete:', e)
+        this.errors.push(e)
+        this.errored = true;
+      })
+    },
+
     addTodo: function (todo) {
+      let requestUrl = API_URL + '/todo';
       let newTodo = {
         title: todo.name,
         notes: todo.notes,
         completed: false,
       };
-      console.info('Creating todo item:', newTodo);
-      axios.post(API_URL, newTodo)
+
+      axios.post(requestUrl, newTodo)
       .then(response => {
         console.info('Todo item created - API response:', response.data)
         this.todos.push(response.data);
@@ -74,7 +112,9 @@ export default {
     },
 
     getTodos() {
-      axios.get(API_URL)
+      let requestUrl = API_URL + '/todo';
+
+      axios.get(requestUrl)
       .then(response => {
         console.log('APP', response.data);
         this.todos = response.data;
@@ -84,7 +124,6 @@ export default {
         this.errors.push(e)
         this.errored = true;
       })
-      console.log(this.todos);
     }
   },
 };
