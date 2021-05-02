@@ -17,8 +17,8 @@
       </thead>
       <tbody>
         <Todo
-          v-for="todo in todos"
-          :key="todo.id"
+          v-for="(todo, index) in todos"
+          :key="index"
           :todo="todo"
           @delete-todo="deleteTodo"
           @complete-todo="completeTodo"
@@ -42,8 +42,11 @@ export default {
   },
   props: {
     todos: {
-      type: [Array,Object],
+      type: Array,
       required: true,
+      default: function() {
+        return [{}]
+      }
     },
   },
   data() {
@@ -53,12 +56,10 @@ export default {
     }
   },
   mounted() {
-    console.log(this.todos)
+    console.log('LIST', this.todos)
   },
   methods: {
-
     deleteTodo(todo) {
-      console.log(API_URL);
       const todoIndex = this.todos.indexOf(todo);
       API_URL += this.todos[todoIndex].id;
       

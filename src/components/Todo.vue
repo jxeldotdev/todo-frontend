@@ -1,13 +1,13 @@
 <template>
   <tr>
     <td class="todo-title">
-      {{ this.todo.title }}
+      {{ todo.title }}
     </td>
     <td class="todo-completion">
-      {{ this.todo.completed }}
+      {{ todo.completed }}
     </td>
     <td class="todo-notes">
-      {{ this.todo.notes }}
+      {{ todo.notes }}
     </td>
     <td id="complete-button">
       <button
@@ -33,7 +33,7 @@ export default {
   name: "Todo",
   props: {
     todo: {
-      type: [Array,Object],
+      type: Object,
       required: true,
     },
   },

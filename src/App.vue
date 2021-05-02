@@ -30,7 +30,7 @@ import axios from 'axios';
 import materialize from "../node_modules/materialize-css/dist/css/materialize.css";
 
 let API_URL = process.env.VUE_APP_API_URL;
-API_URL += "/todo/";
+API_URL += "/todo";
 
 export default {
   name: "App",
@@ -74,11 +74,10 @@ export default {
     },
 
     getTodos() {
-      console.log(API_URL);
       axios.get(API_URL)
       .then(response => {
-        console.log(response.data);
-        this.todos.push(response.data);
+        console.log('APP', response.data);
+        this.todos = response.data;
       })
       .catch( e => {
         console.error('API ERROR - Unable to get list of todo items:', e)
