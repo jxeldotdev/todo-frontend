@@ -11,6 +11,7 @@
     </td>
     <td id="complete-button">
       <button
+        :ref="todo.id"
         class="waves-effect waves-light btn"
         @click="completeTodo"
       >
@@ -19,7 +20,8 @@
     </td>
     <td id="delete-button">
       <button
-        class="waves-effect waves-light btn"
+        :id="todo.id"
+        class="del waves-effect waves-light btn"
         @click="deleteTodo"
       >
         Delete item

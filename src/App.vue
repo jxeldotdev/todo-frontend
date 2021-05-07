@@ -101,7 +101,7 @@ export default {
       axios.post(requestUrl, newTodo)
       .then(response => {
         console.info('Todo item created - API response:', response.data)
-        this.todos.push(response.data);
+        this.todos = response.data;
       })
       .catch( e => {
         console.error('API ERROR - Unable to create todo item:', e)

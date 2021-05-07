@@ -1,0 +1,74 @@
+name: Build docker image
+on:
+  push:
+    tags: v[1-9]+[0-9]+.[0-9]+
+    branches: ['main']
+  pull_request:
+    
+jobs:
+# TODO: Move all this functionality into a Makefile and get it to use the docker container so everything can be done locally.
+  run-unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Cache NPM deps
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+      
+      - name: run linters
+        run: npm run lint
+      
+      - name: Run unit tests
+        run: npm run test:unit
+      
+  
+  docker-build-latest:
+    if: ${{ startsWith(github.ref, 'refs/tags/v') || startsWith(github.ref, 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    needs: run-unit-tests
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
+      - name: Export variables
+        id: vars
+        run: |
+          echp "::set-output name=branch_name::$(echo ${GITHUB_REF} | cut -d '/' -f 3 )"
+          echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push 
+        uses: docker/build-push-action@v2
+        if: ${{ ! startsWith(github.ref, 'refs/tags/v') && ! contains(github.ref, 'main') }}
+        with:
+          context: .
+          push: true
+          pull: true
+          tags: joelfreeman/todo-backend:${{ steps.vars.outputs.branch_name }}_${{ steps.vars.outputs.sha_short }}, jfreemxn/todo-frontend:latest
+          cache-from: type=registry,ref=user/app:latest
+          cache-to: type=inline
+
+      - name: Build and push (tag)
+        uses: docker/build-push-action@v2
+        if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+        with:
+          context: .
+          push: true
+          pull: true
+          tags: joelfreeman/todo-backend:${{ steps.vars.outputs.sha_short }}, jfreemxn/todo-frontend:${{ env.GIT_TAG_NAME }}, jfreemxn/todo-frontend:latest
+          cache-from: type=registry,ref=user/app:latest
+          cache-to: type=inline
+      
