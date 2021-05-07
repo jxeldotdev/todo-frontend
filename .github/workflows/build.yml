@@ -1,9 +1,5 @@
 name: Build docker image
-on:
-  push:
-    tags: v[1-9]+[0-9]+.[0-9]+
-    branches: ['main']
-  pull_request:
+on: ['push','pull_request']
     
 jobs:
 # TODO: Move all this functionality into a Makefile and get it to use the docker container so everything can be done locally.
