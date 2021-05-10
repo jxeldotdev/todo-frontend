@@ -21,6 +21,7 @@
     <td id="delete-button">
       <button
         :id="todo.id"
+        :ref="delete-btn"
         class="del waves-effect waves-light btn"
         @click="deleteTodo"
       >

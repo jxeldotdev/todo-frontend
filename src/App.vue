@@ -71,6 +71,7 @@ export default {
 
     completeTodo: function (todo) {
       let requestUrl = API_URL + '/todo/' + todo.id;
+      let todoIndex = this.todos.indexOf(todo);
       let newTodo = {
         id: todo.id,
         title: todo.title,
@@ -78,7 +79,7 @@ export default {
         completed: todo.completed
       };
       
-      axios.put(requestUrl)
+      axios.put(requestUrl, newTodo)
       .then(response => {
         console.debug('Todo item marked as completed successfully', response.data);
         this.todos[todoIndex].completed = true;

@@ -34,8 +34,12 @@ describe('Todo', () => {
       }
     });
     
-    wrapper.findComponent().trigger('click')
+    let btn = wrapper.find('button#e48d5ebb-0e8e-4d1e-9bee-228a2979baf2.del.waves-effect.waves-light.btn');
+    expect(btn.exists()).toBe(true)
+
+    btn.trigger('click');
     wrapper.vm.$nextTick()
-    expect(wrapper.emitted()).toBeTruthy()
+    expect(wrapper.emitted('delete-todo')).toBeTruthy();
+    expect(wrapper.emitted('delete-todo')[0]).toContainEqual(todoItem);
   })
 });
