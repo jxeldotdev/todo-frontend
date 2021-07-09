@@ -7,6 +7,9 @@
         {{ errors }}
       </blockquote>
     </div>
+    <div class="center-align">
+      <h1>Joel's Todo List</h1>
+    </div>
     <div id="form-wrapper">
       <TodoForm
         :todos="todos"
@@ -102,29 +105,40 @@ export default {
       axios.post(requestUrl, newTodo)
       .then(response => {
         console.info('Todo item created - API response:', response.data)
-        this.todos = response.data;
+        this.todos.push(response.data);
       })
       .catch( e => {
         console.error('API ERROR - Unable to create todo item:', e)
         this.errors.push(e)
         this.errored = true;
       })
-      this.$forceUpdate();
     },
-
-    getTodos() {
+    getTodos: function() {
       let requestUrl = API_URL + '/todo';
-
       axios.get(requestUrl)
       .then(response => {
-        console.log('APP', response.data);
+        console.debug('Response from backend:', response.data);
         this.todos = response.data;
       })
       .catch( e => {
-        console.error('API ERROR - Unable to get list of todo items:', e)
+        console.info("Errored response from backend: ",e.response)
+        if(e.response.status == 404) {
+          console.info("No todo items found")
+        }
+        else {
+        console.error('Unable to get todo items:', e)
         this.errors.push(e)
         this.errored = true;
+        }
       })
+    },
+    checkIfTodosNotEmpty: function() {
+      let jsonStr = JSON.stringify(this.todos);
+      if(JSON.stringify(this.todos) == "[{}]") {
+        console.debug("Todos are empty", jsonStr)
+        return false;
+      }
+      return true;
     }
   },
 };
@@ -141,6 +155,14 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
   
+}
+
+#heading {
+  width: inherit;
+  height: inherit;
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 </style>

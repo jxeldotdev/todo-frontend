@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-DIR=/usr/local/src/app/
+DIR=/usr/local/src/app
 cd $DIR
 
 extract_node_modules() {
@@ -18,7 +18,6 @@ extract_node_modules() {
 }
 
 
-# TODO: UNZIP NODE_MODULES
 case "$@" in 
 
     test)
@@ -38,7 +37,6 @@ case "$@" in
         npm run build
         ;;
     deploy)
-        # TODO: deploy to s3 using aws cli
         exit 1
         ;;
     *)

@@ -42,4 +42,26 @@ describe('Todo', () => {
     expect(wrapper.emitted('delete-todo')).toBeTruthy();
     expect(wrapper.emitted('delete-todo')[0]).toContainEqual(todoItem);
   })
+  it('emits complete-todo', () => {
+    let todoItem = {
+      'id': '76038ed7-9092-4711-83f5-f0927fa7c7c6',
+      'notes': 'Example notes, complete-todo test',
+      'completed': false,
+      'title': 'Example title, complete-todo test',
+    };
+
+    const wrapper = mount(Todo, {
+      propsData: {
+        todo: todoItem
+      }
+    });
+    
+    let btn = wrapper.find('button#76038ed7-9092-4711-83f5-f0927fa7c7c6.waves-effect.waves-light.btn');
+    expect(btn.exists()).toBe(true)
+
+    btn.trigger('click');
+    wrapper.vm.$nextTick()
+    expect(wrapper.emitted('delete-todo')).toBeTruthy();
+    expect(wrapper.emitted('delete-todo')[0]).toContainEqual(todoItem);
+  })
 });

@@ -8,7 +8,7 @@ ADD src tests babel.config.js jest.config.js package*.json cypress.json .eslintr
 
 RUN npm ci
 
-RUN npm run build
+# RUN npm run build
 
 RUN tar -czf node_modules.tar.gz ./node_modules && rm -rf ./node_modules
 

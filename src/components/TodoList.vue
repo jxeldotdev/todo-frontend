@@ -7,24 +7,27 @@
         {{ errors }}
       </blockquote>
     </div>
-    <table class="centered">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Completed?</th>
-          <th>Notes</th>
-        </tr>
-      </thead>
-      <tbody>
-        <Todo
-          v-for="(todo, index) in todos"
-          :key="index"
-          :todo="todo"
-          @delete-todo="deleteTodo"
-          @complete-todo="completeTodo"
-        />
-      </tbody>
-    </table>
+    <h1 v-if="! checkIfTodosNotEmpty()">Test</h1>
+    <div>
+      <table class="centered">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Completed?</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody v-if="checkIfTodosNotEmpty()">
+          <Todo
+            v-for="(todo, index) in todos"
+            :key="index"
+            :todo="todo"
+            @delete-todo="deleteTodo"
+            @complete-todo="completeTodo"
+          />
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -42,6 +45,7 @@ export default {
   },
   props: {
     todos: {
+      // type: Object,
       type: Array,
       required: true,
       default: function() {
@@ -55,16 +59,22 @@ export default {
       errored: false
     }
   },
-  mounted() {
-    console.log('LIST', this.todos)
-  },
   methods: {
     deleteTodo(todo) {
       this.$emit('delete-todo', todo)
     },
     completeTodo(todo) {
       this.$emit('complete-todo', todo)
+    },
+    checkIfTodosNotEmpty() {
+      let jsonStr = JSON.stringify(this.todos);
+      if(JSON.stringify(this.todos) == "[{}]") {
+        console.debug("Todos are empty", jsonStr)
+        return false;
+      }
+      return true;
     }
   },
+
 };
 </script>

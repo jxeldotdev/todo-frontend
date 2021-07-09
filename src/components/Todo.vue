@@ -38,6 +38,9 @@ export default {
     todo: {
       type: Object,
       required: true,
+      default: function() {
+        return {}
+      }
     },
   },
   methods: {
