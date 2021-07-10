@@ -3,11 +3,8 @@
     <h4>Items</h4>
     <div v-if="errored">
       <h3>I'm sorry, the application has encountered an error. Please try again later.</h3>
-      <blockquote v-if="display_errors">
-        {{ errors }}
-      </blockquote>
     </div>
-    <h1 v-if="! checkIfTodosNotEmpty()">Test</h1>
+    <p v-if="this.$parent.todosEmpty">You don't have any todo items. Why not create one?</p>
     <div>
       <table class="centered">
         <thead>
@@ -17,7 +14,7 @@
             <th>Notes</th>
           </tr>
         </thead>
-        <tbody v-if="checkIfTodosNotEmpty()">
+        <tbody v-if="! this.$parent.todosEmpty">
           <Todo
             v-for="(todo, index) in todos"
             :key="index"
@@ -45,12 +42,11 @@ export default {
   },
   props: {
     todos: {
-      // type: Object,
       type: Array,
       required: true,
       default: function() {
         return [{}]
-      }
+      },
     },
   },
   data() {
@@ -66,15 +62,6 @@ export default {
     completeTodo(todo) {
       this.$emit('complete-todo', todo)
     },
-    checkIfTodosNotEmpty() {
-      let jsonStr = JSON.stringify(this.todos);
-      if(JSON.stringify(this.todos) == "[{}]") {
-        console.debug("Todos are empty", jsonStr)
-        return false;
-      }
-      return true;
-    }
   },
-
 };
 </script>

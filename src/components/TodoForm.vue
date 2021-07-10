@@ -8,7 +8,7 @@ export default {
   },
   methods: {
     sendForm: function () {
-      if (this.name.length > 0 && this.notes.length > 0) {
+      if (this.name.length > 0) {
         const name = this.name;
         const notes = this.notes;
         this.$emit("create-todo", {

@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <NavigationBar/>
     <div v-if="errored">
       <h3>I'm sorry, the application has encountered an error. Please try again later.</h3>
 
@@ -8,7 +9,7 @@
       </blockquote>
     </div>
     <div class="center-align">
-      <h1>Joel's Todo List</h1>
+      <h1>Joel's task tracker</h1>
     </div>
     <div id="form-wrapper">
       <TodoForm
@@ -30,7 +31,9 @@
 <script>
 import TodoForm from "./components/TodoForm.vue";
 import TodoList from "./components/TodoList.vue";
+import NavigationBar from "./components/NavigationBar.vue";
 import axios from 'axios';
+// css is used in template
 import materialize from "../node_modules/materialize-css/dist/css/materialize.css";
 
 let API_URL = process.env.VUE_APP_API_URL;
@@ -38,12 +41,14 @@ let API_URL = process.env.VUE_APP_API_URL;
 export default {
   name: "App",
   components: {
+    NavigationBar,
     TodoForm,
     TodoList,
   },
   data() {
     return {
       todos: [{}],
+      todosEmpty: true,
       errors: [],
       errored: false,
       display_errors: false,
@@ -59,16 +64,44 @@ export default {
     deleteTodo(todo) {
       let requestUrl = API_URL + '/todo/' + todo.id;
       const todoIndex = this.todos.indexOf(todo);
-
       axios.delete(requestUrl)
       .then(response => {
         console.debug('Todo item deleted successfully - API Response:', response.data);
         this.todos.splice(todoIndex, 1);
+        // set todosEmpty to true if it' the last element
+        if(this.todos.length == 0 ){
+          this.todosEmpty = true;
+        }
       })
       .catch( e => {
-        console.error('API ERROR - Unable to delete todo item:', e)
-        this.errors.push(e)
-        this.errored = true;
+        if (e.response) {
+          // response was recieved, status code was not 2xx
+          if (e.response.status == 404) {
+            this.todosEmpty = true;
+            console.log(
+              `Error recived from backend server while deleting todo iem ${todo.id} - item does not exist`
+            )
+          } else {
+            console.log(`Error recieved from backend server while deleting todo item ${todo.id}`)
+            this.errored = true;
+            this.errors.push(e)
+          }
+          console.log(e.response.data);
+          console.log(e.response.status);
+          console.log(e.response.headers);
+        } else if (e.request) {
+          // no response recieved from backend, request probably timed out
+          console.log(`Request timed out from backend server while deleting todo item ${todo.id}`)
+          console.log(e.request);
+          this.errors.push(e)
+          this.errored = true;
+        }
+        else {
+          // something happened when setting up request that triggered an error
+          console.log("Unknown error", e.message)
+          this.errored = true;
+          this.errors.push(e.message)
+        }
       })
     },
 
@@ -82,15 +115,40 @@ export default {
         completed: todo.completed
       };
       
-      axios.put(requestUrl, newTodo)
+      axios.put(requestUrl, newTodo, {timeout: 3000})
       .then(response => {
         console.debug('Todo item marked as completed successfully', response.data);
         this.todos[todoIndex].completed = true;
       })
       .catch( e => {
-        console.error('API ERROR - Unable to mark todo as complete:', e)
-        this.errors.push(e)
-        this.errored = true;
+        if (e.response) {
+          // response was recieved, status code was not 2xx
+          if (e.response.status == 404) {
+            this.todosEmpty = true;
+            console.log(
+              `Error received while trying to complete todo item ${newTodo}`
+            )
+          } else {
+            console.log(`Error recieved from backend server while marking todo item ${newTodo.id} as complete`)
+            this.errored = true;
+            this.errors.push(e)
+          }
+          console.log(e.response.data);
+          console.log(e.response.status);
+          console.log(e.response.headers);
+        } else if (e.request) {
+          // no response recieved from backend, request probably timed out
+          console.log("Request timed out from backend server while marking todo item as completed.")
+          console.log(e.request);
+          this.errors.push(e)
+          this.errored = true;
+        }
+        else {
+          // something happened when setting up request that triggered an error
+          console.log("Unknown error", e.message)
+          this.errored = true;
+          this.errors.push(e.message)
+        }
       })
     },
 
@@ -102,10 +160,16 @@ export default {
         completed: false,
       };
 
-      axios.post(requestUrl, newTodo)
+      axios.post(requestUrl, newTodo, {timeout: 3000})
       .then(response => {
-        console.info('Todo item created - API response:', response.data)
-        this.todos.push(response.data);
+        console.log('Todo item created - API response:', response.data);
+        // remove empty todo object
+        if(JSON.stringify(this.todos) == "[{}]") {
+          this.todos = [response.data];
+        } else {
+          this.todos.push(response.data);
+        }
+        this.todosEmpty = false;
       })
       .catch( e => {
         console.error('API ERROR - Unable to create todo item:', e)
@@ -115,31 +179,44 @@ export default {
     },
     getTodos: function() {
       let requestUrl = API_URL + '/todo';
-      axios.get(requestUrl)
+      // 3s timeout
+      axios.get(requestUrl, {timeout: 3000})
       .then(response => {
-        console.debug('Response from backend:', response.data);
+        console.log('Response from backend:', response.data);
         this.todos = response.data;
+        this.todosEmpty = false;
       })
       .catch( e => {
-        console.info("Errored response from backend: ",e.response)
-        if(e.response.status == 404) {
-          console.info("No todo items found")
+        if (e.response) {
+          // response was recieved, status code was not 2xx
+          if (e.response.status == 404) {
+            this.todosEmpty = true;
+            console.log(
+              "Error recived from backend server while retreiving todo list - no todo items exist"
+            )
+          } else {
+            console.log("Error recieved from backend server while retreiving todo list")
+            this.errored = true;
+            this.errors.push(e)
+          }
+          console.log(e.response.data);
+          console.log(e.response.status);
+          console.log(e.response.headers);
+        } else if (e.request) {
+          // no response recieved from backend, request probably timed out
+          console.log("Request timed out from backend server while retreiving todo list")
+          console.log(e.request);
+          this.errors.push(e)
+          this.errored = true;
         }
         else {
-        console.error('Unable to get todo items:', e)
-        this.errors.push(e)
-        this.errored = true;
+          // something happened when setting up request that triggered an error
+          console.log("Unknown error", e.message)
+          this.errored = true;
+          this.errors.push(e.message)
         }
       })
     },
-    checkIfTodosNotEmpty: function() {
-      let jsonStr = JSON.stringify(this.todos);
-      if(JSON.stringify(this.todos) == "[{}]") {
-        console.debug("Todos are empty", jsonStr)
-        return false;
-      }
-      return true;
-    }
   },
 };
 
