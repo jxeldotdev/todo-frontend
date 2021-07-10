@@ -3,15 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve --skip-plugins @vue/cli-plugin-eslint",
+    "serve": "vue-cli-service serve --port 8000",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@vue/cli": "^4.5.12",
+    "@vue/cli-shared-utils": "^4.5.12",
     "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
+    "chokidar": "^3.5.1",
     "core-js": "^3.6.5",
     "materialize-css": "^1.0.0-rc.2",
     "milligram": "^1.4.1",

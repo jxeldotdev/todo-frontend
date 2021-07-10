@@ -10,11 +10,13 @@ describe('TodoList.vue', () => {
     
     const todoItems = [
         {
+            'id': 'e48d5ebb-0e8e-4d1e-9bee-228a2979baf2',
             "title": "example title 1",
             "notes": "example notes 1",
             "completed": false,
         },
         {
+            'id': '8820a313-4aed-4e7e-9d69-a0309f676f11',
             "title": "example title 2",
             "notes": "example notes 2",
             "completed": false,
