@@ -1,0 +1,74 @@
+
+on:
+  workflow_dispatch:
+    inputs:
+      branchName:
+        description: 'Branch name to build code from'     
+        default: 'main'
+      environment:
+        description: 'Development or Production environment'
+      backendUrl:
+        description: "Backend API URL"
+        required: true
+      s3BucketName:
+        description: ""
+      cfDistributionID:
+        description: ""  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.client_payload.sha }}
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+            - name: Cache docker layers
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os}}-node-modules-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-node_modules-
+      
+      - name: Install dependencies
+        run: |
+          npm install
+        
+      - uses: actions/download-artifact@v2
+        id: download
+        continue-on-error: true
+        with:
+          name: todo-frontend-${{ github.sha }}
+          path: dist
+
+      - name: Build Frontend Artifact
+        if: ${{ steps.download.conclusion == 'failure' }}
+        env:
+          VUE_APP_API_URL: ${{ github.event.inputs.backendUrl }}
+        run: |
+          yarn run build
+
+      - name: 'Upload Artifact'
+        uses: actions/upload-artifact@v2
+        if: ${{ steps.download.conclusion == 'failure' }}
+        with:
+          name: todo-frontend-${{ github.sha }}
+          path: 
+          retention-days: 5
+  deploy-to-s3-dev:
+    needs: build
+    runs-on: dev-runners
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.client_payload.sha }}
+
+  deploy-to-s3-prod:
+    needs: build
+    runs-on: prod-runners
+  

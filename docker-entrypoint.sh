@@ -1,46 +1,17 @@
 #!/bin/sh
-set -eu
 
-DIR=/usr/local/src/app
-cd $DIR
+if ! env | grep -q BACKEND_PROTO; then
+    BACKEND_PROTO="http"
+fi
+if ! env | grep -q BACKEND_PORT; then
+    BACKEND_PORT="80"
+fi
+if ! env | grep -q BACKEND_HOST; then
+    BACKEND_HOST="localhost"
+fi
 
-extract_node_modules() {
+sed -i "s/http:\/\/localhost:8080/$BACKEND_PROTO:\/\/$BACKEND_HOST:$BACKEND_PORT/" /usr/share/nginx/html/config.json
 
-    if [ ! -d $DIR/node_modules ]
-    then
-        echo "node_modules dir does not exist, extracting compressed archive"
-        tar -xzf $DIR/node_modules.tar.gz $DIR
-        return 1
-    else
-        echo "node_modules directory is present, removing archive"
-        rm -vf "$DIR/node_modules.tar.gz"
-    fi
-}
+echo "Updated Backend API URL at /usr/share/nginx/html/config.json to $BACKEND_PROTO://$BACKEND_HOST:$BACKEND_PORT"
 
-
-case "$@" in 
-
-    test)
-        extract_node_modules
-        npm run lint
-        npm run test:unit
-        ;;
-    serve)
-        extract_node_modules
-        npm run serve
-        ;;
-    nginx)
-        exit 1
-        ;;
-    build)
-        extract_node_modules
-        npm run build
-        ;;
-    deploy)
-        exit 1
-        ;;
-    *)
-        extract_node_modules
-        $@
-        ;;
-esac
+exec nginx

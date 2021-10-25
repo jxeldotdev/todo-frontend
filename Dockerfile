@@ -1,24 +1,16 @@
-FROM node:lts-alpine as build
+FROM node:14-alpine AS build
 
-RUN mkdir -p /usr/local/src/app/
+WORKDIR /app
+COPY package*.json yarn* ./
+RUN yarn install
+ADD ./ .
+RUN yarn run build
 
-WORKDIR /usr/local/src/app
-
-ADD src tests babel.config.js jest.config.js package*.json cypress.json .eslintrc.js /usr/local/src/app/
-
-RUN npm ci
-
-# RUN npm run build
-
-RUN tar -czf node_modules.tar.gz ./node_modules && rm -rf ./node_modules
-
-# TODO:
-# Remove node modules, run build after installing, then setup nginx for serving
-# GitHub Actions will cache node modules - this way the docker image can be way smaller as devs will use volumes with node_modules installed :)
-
-FROM build
+FROM nginx:stable-alpine
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+ADD dist/ /usr/share/nginx/html
 
 ADD docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
-ENTRYPOINT [ "/usr/local/bin/docker-entrypoint.sh" ] 
+ENTRYPOINT [ "/usr/local/bin/docker-entrypoint.sh" ]

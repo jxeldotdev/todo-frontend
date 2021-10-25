@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <NavigationBar/>
     <div v-if="errored">
       <h3>I'm sorry, the application has encountered an error. Please try again later.</h3>
 
@@ -31,17 +30,17 @@
 <script>
 import TodoForm from "./components/TodoForm.vue";
 import TodoList from "./components/TodoList.vue";
-import NavigationBar from "./components/NavigationBar.vue";
+
 import axios from 'axios';
 // css is used in template
 import materialize from "../node_modules/materialize-css/dist/css/materialize.css";
 
-let API_URL = process.env.VUE_APP_API_URL;
+var cfg = require('./config.json');
+let API_URL = cfg.API_URL
 
 export default {
   name: "App",
   components: {
-    NavigationBar,
     TodoForm,
     TodoList,
   },
