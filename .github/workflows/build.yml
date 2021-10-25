@@ -54,7 +54,7 @@ jobs:
         env:
           VUE_APP_API_URL: ${{ github.event.inputs.backendUrl }}
         run: |
-          npx build      
+          yarn run build
 
       - name: 'Upload Artifact'
         uses: actions/upload-artifact@v2
