@@ -111,13 +111,17 @@ export default {
         id: todo.id,
         title: todo.title,
         notes: todo.notes,
-        completed: todo.completed
+        completed: true
       };
-      
+
+      if(todo.completed == true) {
+        newTodo.completed = false
+      }
+
       axios.put(requestUrl, newTodo, {timeout: 3000})
       .then(response => {
         console.debug('Todo item marked as completed successfully', response.data);
-        this.todos[todoIndex].completed = true;
+        this.todos[todoIndex].completed = newTodo.completed
       })
       .catch( e => {
         if (e.response) {
