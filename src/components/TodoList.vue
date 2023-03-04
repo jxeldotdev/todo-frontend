@@ -4,7 +4,9 @@
     <div v-if="errored">
       <h3>I'm sorry, the application has encountered an error. Please try again later.</h3>
     </div>
-    <p v-if="this.$parent.todosEmpty">You don't have any todo items. Why not create one?</p>
+    <p v-if="$parent.todosEmpty">
+      You don't have any todo items. Why not create one?
+    </p>
     <div>
       <table class="centered">
         <thead>
@@ -14,8 +16,8 @@
             <th>Notes</th>
           </tr>
         </thead>
-        <tbody v-if="! this.$parent.todosEmpty">
-          <Todo
+        <tbody v-if="! $parent.todosEmpty">
+          <TodoItem
             v-for="(todo, index) in todos"
             :key="index"
             :todo="todo"
@@ -29,8 +31,7 @@
 </template>
 
 <script>
-import Todo from "./Todo.vue";
-import axios from 'axios'
+import TodoItem from "./Todo.vue";
 
 let API_URL = process.env.VUE_APP_API_URL 
 API_URL += "/todo/";
@@ -38,7 +39,7 @@ API_URL += "/todo/";
 export default {
   name: "TodoList",
   components: {
-    Todo,
+    TodoItem,
   },
   props: {
     todos: {

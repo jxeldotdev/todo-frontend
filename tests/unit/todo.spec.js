@@ -22,7 +22,7 @@ describe('Todo', () => {
   });
   it('emits delete-todo', () => {
     let todoItem = {
-      'id': 'e48d5ebb-0e8e-4d1e-9bee-228a2979baf2',
+      'id': 3,
       'notes': 'Example notes',
       'completed': false,
       'title': 'Example title',
@@ -34,7 +34,7 @@ describe('Todo', () => {
       }
     });
     
-    let btn = wrapper.find('button#e48d5ebb-0e8e-4d1e-9bee-228a2979baf2.del.waves-effect.waves-light.btn');
+    let btn = wrapper.find('button#3.del.waves-effect.waves-light.btn');
     expect(btn.exists()).toBe(true)
 
     btn.trigger('click');
@@ -44,10 +44,10 @@ describe('Todo', () => {
   })
   it('emits complete-todo', () => {
     let todoItem = {
-      'id': '76038ed7-9092-4711-83f5-f0927fa7c7c6',
-      'notes': 'Example notes, complete-todo test',
+      'id': 4,
+      'notes': 'Example notes',
       'completed': false,
-      'title': 'Example title, complete-todo test',
+      'title': 'Example title',
     };
 
     const wrapper = mount(Todo, {
@@ -56,12 +56,12 @@ describe('Todo', () => {
       }
     });
     
-    let btn = wrapper.find('button#76038ed7-9092-4711-83f5-f0927fa7c7c6.waves-effect.waves-light.btn');
-    expect(btn.exists()).toBe(true)
+    const completeBtn = wrapper.findComponent('button#4.complete.waves-effect.waves-light.btn')
+    expect(completeBtn.exists()).toBe(true)
 
     btn.trigger('click');
     wrapper.vm.$nextTick()
-    expect(wrapper.emitted('delete-todo')).toBeTruthy();
-    expect(wrapper.emitted('delete-todo')[0]).toContainEqual(todoItem);
+    expect(wrapper.emitted('complete-todo')).toBeTruthy();
+    expect(wrapper.emitted('complete-todo')[0]).toContainEqual(todoItem);
   })
 });

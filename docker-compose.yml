@@ -3,22 +3,27 @@ services:
     frontend:
         image: todo-frontend:latest
         build: .
+        command: web
         ports:
-            - 8000:80
-    # db:
-    #     image: postgres:alpine
-    #     ports: 
-    #     - 5432:5432
-    #     env_file: .env
-    #     volumes:
-    #     - data:/var/lib/postgresql/data
-    # backend:
-    #     image: joelfreeman/todo-backend:latest
-    #     volumes:
-    #     - $HOME/Projects/todo-backend/src/:/home/todoapp/src/
-    #     ports:
-    #     - 8080:8080
-    #     env_file: .env
-    #     command: web
+        - 8000:80
+        environment:
+            BACKEND_HOST: ""
+    db:
+        image: postgres:alpine
+        ports: 
+        - 5432:5432
+        env_file: .env
+        volumes:
+        - data:/var/lib/postgresql/data
+    backend:
+        build: /Users/joelfreeman/work/git/todo-app-stack/app/todo-backend/.
+        image: joelfreeman/todo-backend:latest
+        # volumes:
+        # - $HOME/work/git/todo-app-stack/app/todo-backend/src/:/home/todoapp/src/
+        ports:
+        - 8080:8080
+        env_file: .env
+        command: web
+        depends_on: ['db']
 volumes:
     data:

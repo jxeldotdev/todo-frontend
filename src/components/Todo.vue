@@ -12,10 +12,10 @@
     <td id="complete-button">
       <button
         :ref="todo.id"
-        class="waves-effect waves-light btn"
+        class="complete waves-effect waves-light btn"
         @click="completeTodo"
       >
-        Mark As Completed
+        Change completion
       </button>
     </td>
     <td id="delete-button">
@@ -32,7 +32,7 @@
 
 <script>
 export default {
-  name: "Todo",
+  name: "TodoItem",
   props: {
     todo: {
       type: Object,

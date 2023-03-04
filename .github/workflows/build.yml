@@ -1,8 +1,7 @@
-name: Build docker image
+name: Build docker image and run tests
 on: ['push','pull_request']
     
 jobs:
-# TODO: Move all this functionality into a Makefile and get it to use the docker container so everything can be done locally.
   run-unit-tests:
     runs-on: ubuntu-latest
     steps:
@@ -18,50 +17,16 @@ jobs:
             ${{ runner.os }}-modules-
       
       - name: Install dependencies
-        run: npm install
+        run: npm install --dev
       
       - name: run linters
         run: npm run lint
       
       - name: Run unit tests
         run: npm run test:unit
-      
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.client_payload.sha }}
 
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-
-      - name: Cache node_modules
-        uses: actions/cache@v2
-        with:
-          path: node_modules
-          key: ${{ runner.os}}-node-modules-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-node_modules-
-      
-      - name: Install dependencies
-        run: |
-          npm install
-
-      - name: Build Frontend Artifact
-        env:
-          VUE_APP_API_URL: ${{ github.event.inputs.backendUrl }}
-        run: |
-          yarn run build
-
-      - name: 'Upload Artifact'
-        uses: actions/upload-artifact@v2
-        with:
-          name: todo-frontend-${{ github.sha }}
-          path: dist/
-          retention-days: 5
+      - name: Test that app builds properly
+        run: npm run build --minify
 
   docker-build-latest:
     runs-on: ubuntu-latest
@@ -105,8 +70,8 @@ jobs:
           context: .
           push: true
           pull: true
-          tags: joelfreeman/todo-backend:${{ steps.vars.outputs.branch_name }}_${{ steps.vars.outputs.sha_short }}, joelfreeman/todo-frontend:latest
-          cache-from: type=registry,ref=user/app:latest
+          tags: joelfreeman/todo-frontend:${{ steps.vars.outputs.branch_name }}_${{ steps.vars.outputs.sha_short }}, joelfreeman/todo-frontend:latest
+          cache-from: type=registry,ref=joelfreeman/todo-frontend:latest
           cache-to: type=inline
 
       - name: Build and push (tag)
@@ -117,7 +82,7 @@ jobs:
           push: true
           pull: true
           tags: joelfreeman/todo-backend:${{ steps.vars.outputs.sha_short }}, jfreemxn/todo-frontend:${{ env.GIT_TAG_NAME }}, joelfreeman/todo-frontend:latest
-          cache-from: type=registry,ref=user/app:latest
+          cache-from: type=registry,ref=joelfreeman/todo-frontend:latest
           cache-to: type=inline
       
       - name: Move cache
